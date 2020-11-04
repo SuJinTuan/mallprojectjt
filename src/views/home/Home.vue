@@ -3,25 +3,28 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <recommend-view :recommends="recommends"></recommend-view>
-    <feature-view></feature-view>
-    <tab-control class="tab-control" :titles="['流行', '新款', '精选']">
-    </tab-control>
-    <goods-list :goods="goods['pop'].list"></goods-list>
+    <!-- 如果不加冒号传过去的就是字符串,我们要确定类型;驼峰命名如果不加-变成小写，那么就会报错，因为HTML5和vue的底层原因 -->
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore"
+    >
+      <home-swiper :banners="banners" />
+      <recommend-view :recommends="recommends" />
+      <feature-view />
+      <tab-control
+        class="tab-control"
+        :titles="['流行', '新款', '精选']"
+        @tabClick="tabClick"
+      />
+      <goods-list :goods="showGoods" />
+    </scroll>
 
-    <ul>
-      <li>1</li>
-      <li>2</li>
-      <li>3</li>
-      <li>4</li>
-      <li>5</li>
-      <li>6</li>
-      <li>7</li>
-      <li>8</li>
-      <li>9</li>
-      <li>10</li>
-    </ul>
+    <!-- 监听组件根元素 -->
+    <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -36,6 +39,8 @@ import FeatureView from "./childComponent/FeatureView";
 import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
+import Scroll from "components/common/scroll/Scroll";
+import BackTop from "components/content/backTop/BackTop";
 
 //network
 import { getHomeMultidata, getHomeGoods } from "network/home";
@@ -47,6 +52,8 @@ export default {
     HomeSwiper,
     RecommendView,
     FeatureView,
+    Scroll,
+    BackTop,
 
     NavBar,
     TabControl,
@@ -62,7 +69,15 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] },
       },
+      currentType: "pop",
+      isShowBackTop: false,
     };
+  },
+
+  computed: {
+    showGoods() {
+      return this.goods[this.currentType].list;
+    },
   },
   // 主键创建完之后立即进行网络请求
   created() {
@@ -74,7 +89,41 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
+
   methods: {
+    /**
+     *事监听相关的方法
+     */
+    tabClick(index) {
+      switch (index) {
+        case 0:
+          this.currentType = "pop";
+          break;
+        case 1:
+          this.currentType = "new";
+          break;
+        case 2:
+          this.currentType = "sell";
+          break;
+      }
+    },
+    backClick() {
+      // console.log(this.$refs.scroll.scroll);
+      this.$refs.scroll.scrollTo(0, 0, 1000);
+    },
+    contentScroll(position) {
+      // position.y < 1000;
+      this.isShowBackTop = -position.y > 1000 ? true : false;
+    },
+    loadMore() {
+      this.getHomeGoods(this.currentType);
+
+      this.$refs.scroll.scroll.refresh();
+    },
+
+    /**
+     * 网络请求相关的方法
+     */
     getHomeMultidata() {
       getHomeMultidata().then(
         (res) => {
@@ -93,6 +142,8 @@ export default {
         // console.log(res);
         this.goods[type].list.push(...res.data.data.list);
         this.goods[type].page += 1;
+
+        this.$refs.scroll.finishPullUp();
       });
     },
   },
@@ -102,6 +153,9 @@ export default {
 <style scoped>
 #home {
   padding-top: 44px;
+  /* 视口高度 */
+  height: 100vh;
+  position: relative;
 }
 .home-nav {
   background-color: var(--color-tint);
@@ -119,4 +173,21 @@ export default {
   top: 44px;
   z-index: 9;
 }
+
+.content {
+  overflow: hidden;
+
+  /* 脱离标准流 */
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+}
+
+/* .centent {
+  height: calc(100%-93px);
+  overflow: hidden;
+  margin-top: 44px;
+} */
 </style>

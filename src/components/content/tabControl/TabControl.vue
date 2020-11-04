@@ -18,6 +18,7 @@
 <script>
 export default {
   name: "TabControl",
+  // 外面往里面传
   props: {
     titles: {
       type: Array,
@@ -35,6 +36,8 @@ export default {
   methods: {
     itemClick(index) {
       this.currentIndex = index;
+      //子组件发送点击 （把事件传到外面去）使用自定义事件；内部发生事件往外部传
+      this.$emit("tabClick", index);
     },
   },
 };
