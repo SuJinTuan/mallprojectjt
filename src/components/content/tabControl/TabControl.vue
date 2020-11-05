@@ -4,7 +4,7 @@
     <!-- 绑定事件；绑定类样式； -->
     <div
       v-for="(item, index) in titles"
-      class="tab-control-iten"
+      class="tab-control-item"
       :class="{ active: index === currentIndex }"
       @click="itemClick(index)"
     >
@@ -21,6 +21,7 @@ export default {
   // 外面往里面传
   props: {
     titles: {
+      // 当默认值的对象或者数组时，要把它变成函数，在返回默认值
       type: Array,
       default() {
         return [];
@@ -52,10 +53,10 @@ export default {
   line-height: 40px;
   background-color: #fff;
 }
-.tab-control-iten {
+.tab-control-item {
   flex: 1;
 }
-.tab-control-iten span {
+.tab-control-item span {
   padding: 5px;
 }
 .active {
