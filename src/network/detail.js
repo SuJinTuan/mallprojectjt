@@ -9,6 +9,15 @@ export function getDetail(iid) {
   })
 }
 
+export function getRecommend() {
+  return request({
+    url: '/recommend'
+  })
+}
+
+
+
+
 // 面向对象的封装：将服务器返回的数据将其封装到一个类里面在然后创建类对应的对象；
 // 用对象给我们把这些信息传到下一层组件里面；让组件对这个东西做一个展示
 export class Goods {
@@ -23,6 +32,47 @@ export class Goods {
     this.services = services;
   }
 }
+
+export class Shop {
+  constructor(shopInfo) {
+    this.logo = shopInfo.shopLogo;
+    this.name = shopInfo.name;
+    this.fans = shopInfo.cFans;
+    this.sells = shopInfo.cSells;
+    this.score = shopInfo.score;
+    this.goodsCount = shopInfo.cGoods;
+
+  }
+}
+
+export class GoodsParam {
+  constructor(info, rule) {
+    // 注意：images可能没有值：有些有，有些没有
+    this.image = info.images ? info.images[0] : '';
+    this.infos = info.set;
+    this.sizes = rule.tables;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // const g = new GoodsInfo();
 // g.title
 // g.desc
@@ -35,3 +85,8 @@ export class Goods {
 // }
 
 // const p = new Person('sjt',18)
+// 如何判断一个对象是一个空对像？
+// const obj = {
+
+// }
+// Object.keys(obj).length===0则说明是一个空对象
