@@ -4,7 +4,7 @@
     children：获取所有子组件（数组）
    -->
   <div class="wrapper" ref="wrapper">
-    <div class="content">
+    <div>
       <slot></slot>
     </div>
   </div>
@@ -85,3 +85,5 @@ export default {
 
 <style scoped>
 </style>
+
+

@@ -30,10 +30,13 @@ import {
   Goods,
   Shop,
   GoodsParam,
-  getRecommend,
+  // getRecommend,
 } from "network/detail";
 
 import GoodsList from "components/content/goods/GoodsList";
+
+import { itemListenerMinxin } from "common/mixin";
+
 export default {
   name: "Detail",
   components: {
@@ -48,6 +51,7 @@ export default {
     Scroll,
     GoodsList,
   },
+  mixins: [itemListenerMinxin],
   data() {
     return {
       iid: null,
@@ -58,6 +62,7 @@ export default {
       paramInfo: {},
       commentInfo: {},
       recommends: [],
+     
     };
   },
   created() {
@@ -104,11 +109,19 @@ export default {
     });
 
     // 3.请求推荐数据
-    getRecommend().then((res) => {
-      this.recommends = res.data.data.list;
-    });
+    // getRecommend().then((res) => {
+    //   this.recommends = res.data.data.list;
+    // });
   },
+  mounted() {
 
+  },
+  // destroyed
+  deactivated() {
+    //1.取消全局变量的监听
+    this.$bus.$off("itemImageLoad", this.itemImgListener);
+    console.log("$off-destroyed");
+  },
   methods: {
     // 获取重新刷新scroll；为了获取图片加载完的高度
     imageLoad() {

@@ -63,6 +63,7 @@ import { getHomeMultidata, getHomeGoods } from "network/home";
 
 // common
 import { debounce } from "common/utils";
+import { itemListenerMinxin } from "common/mixin";
 
 export default {
   name: "Home",
@@ -78,6 +79,7 @@ export default {
     TabControl,
     GoodsList,
   },
+  mixins: [itemListenerMinxin],
   // 存储我们传过来的数据
   data() {
     return {
@@ -93,6 +95,7 @@ export default {
       tabOffsetTop: 0,
       isTabFiexed: false,
       saveY: 0,
+      
     };
   },
 
@@ -112,8 +115,12 @@ export default {
     this.$refs.scroll.refresh();
   },
   deactivated() {
+    // 1.保存Y值
     this.saveY = this.$refs.scroll.getScrollY();
     console.log("deactivated");
+
+    // 2.取消全局变量的监听
+    this.$bus.$off("itemImageLoad", this.itemImgListener);
   },
   // 主键创建完之后立即进行网络请求
   created() {
@@ -129,7 +136,7 @@ export default {
   mounted() {
     // 1.图片加载完成的事件监听
     // refresh产生了闭包
-    const refresh = debounce(this.$refs.scroll.refresh, 50);
+    // const refresh = debounce(this.$refs.scroll.refresh, 50);1
     // const refresh = function (...args) {
     //   if (timer) clearTimeout(timer);
     //   timer = setTimeout(() => {
@@ -138,12 +145,11 @@ export default {
     // };
     // 3.监听item中图片加载完成
     // 我们在createed里面拿$refs, 非常有可能是拿不到;
-    this.$bus.$on("itemImageLoad", () => {
-      // console.log(this.$refs.scroll.refresh);
-      // console.log(1);
-      refresh();
-      // this.$refs.scroll.refresh();
-    });
+    // 对我们监听的事件进行保存
+    // this.itemImgListener = () => {2
+    // refresh();3
+    // };4
+    // this.$bus.$on("itemImageLoad", this.itemImgListener);5
   },
 
   methods: {
