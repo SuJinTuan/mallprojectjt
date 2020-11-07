@@ -106,7 +106,7 @@ export default {
   },
   destroyed() {
     // 这个方法会被默认的执行
-    console.log("home-d");
+    // console.log("home-d");
   },
   activated() {
     console.log("home-enter-位置-activated");
@@ -117,7 +117,7 @@ export default {
   deactivated() {
     // 1.保存Y值
     this.saveY = this.$refs.scroll.getScrollY();
-    console.log("deactivated");
+    // console.log("deactivated");
 
     // 2.取消全局变量的监听
     this.$bus.$off("itemImageLoad", this.itemImgListener);
@@ -136,7 +136,7 @@ export default {
   mounted() {
     // 要手动代码点击一次？？？
     this.tabClick(0);
-    console.log(123);
+    // console.log(123);
     // 1.图片加载完成的事件监听
     // refresh产生了闭包
     // const refresh = debounce(this.$refs.scroll.refresh, 50);1
@@ -160,7 +160,6 @@ export default {
      *事监听相关的方法
      */
     tabClick(index) {
-      console.log(index);
       switch (index) {
         case 0:
           this.currentType = "pop";

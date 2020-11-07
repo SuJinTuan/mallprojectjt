@@ -70,8 +70,9 @@ export default {
       this.scroll && this.scrollTo && this.scroll.finishPullUp();
     },
     refresh() {
-      console.log(1);
+      //
       this.scroll && this.refresh && this.scroll.refresh();
+      console.log(1);
     },
     getScrollY() {
       return this.scroll ? this.scroll.y : 0;

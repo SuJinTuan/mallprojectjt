@@ -11,16 +11,18 @@ export const itemListenerMinxin = {
   data() {
     return {
       itemImgListener: null,
+      refresh: null,
     }
   },
   mounted() {
-    const refresh = debounce(this.$refs.scroll.refresh, 50);
-    console.log("refresh-de-detail");
+    this.refresh = debounce(this.$refs.scroll.refresh, 50);
+    // console.log("minxin-refresh-de-detail");
 
     this.itemImgListener = () => {
-      refresh();
+      this.refresh();
+
     };
     this.$bus.$on("itemImageLoad", this.itemImgListener);
-    console.log("防抖--detail");
+    // console.log("mixin-防抖--detail");
   },
 }
