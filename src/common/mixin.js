@@ -1,10 +1,8 @@
 // common
-import { debounce } from "common/utils";
+import { debounce } from "./utils";
+import BackTop from "components/content/backTop/BackTop";
 export const itemListenerMinxin = {
   // components: {
-
-  // },
-  // methods: {
 
   // },
 
@@ -24,5 +22,21 @@ export const itemListenerMinxin = {
     };
     this.$bus.$on("itemImageLoad", this.itemImgListener);
     // console.log("mixin-防抖--detail");
+  },
+}
+
+export const backTopMixin = {
+  components: {
+    BackTop
+  },
+  data() {
+    return {
+      isShowBackTop: false
+    }
+  },
+  methods: {
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0, 1000);
+    },
   },
 }

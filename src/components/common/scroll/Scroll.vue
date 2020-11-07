@@ -36,11 +36,10 @@ export default {
     // 我们为了更准确的获取元素：可以绑定一个ref
     // console.log(this.$refs);
     this.scroll = new BScroll(this.$refs.wrapper, {
-      click: true,
-
-      probeType: this.probeType,
       // // 实现上拉加载
       pullUpLoad: this.pullUpLoad,
+      probeType: this.probeType,
+      click: true,
     });
     // 2.监听滚动的位置
     if (this.probeType === 2 || this.probeType == 3) {

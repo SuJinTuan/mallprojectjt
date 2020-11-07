@@ -56,14 +56,11 @@ import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backTop/BackTop";
 
 //network
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
-// common
-import { debounce } from "common/utils";
-import { itemListenerMinxin } from "common/mixin";
+import { itemListenerMinxin, backTopMixin } from "common/mixin";
 
 export default {
   name: "Home",
@@ -73,13 +70,12 @@ export default {
     RecommendView,
     FeatureView,
     Scroll,
-    BackTop,
 
     NavBar,
     TabControl,
     GoodsList,
   },
-  mixins: [itemListenerMinxin],
+  mixins: [itemListenerMinxin, backTopMixin],
   // 存储我们传过来的数据
   data() {
     return {
@@ -178,10 +174,10 @@ export default {
       this.$refs.tabControl.currentType = index;
       // }
     },
-    backClick() {
-      // console.log(this.$refs.scroll.scroll);
-      this.$refs.scroll.scrollTo(0, 0, 1000);
-    },
+    // backClick() {
+    //   // console.log(this.$refs.scroll.scroll);
+    //   this.$refs.scroll.scrollTo(0, 0, 1000);
+    // },
     contentScroll(position) {
       // 1.判断BackTop是否显示
       // position.y < 1000;

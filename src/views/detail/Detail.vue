@@ -1,7 +1,13 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav" @tabClick="tabClick" />
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar class="detail-nav" @tabClick="tabClick" ref="nav" />
+    <!-- 因为probetype默认是一个：0 如果不传一个值过去，则监听不到probetype -->
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+    >
       <!-- 属性：topImages 传入值:top-images -->
       <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
@@ -11,7 +17,9 @@
       <detail-comment-info :comment-info="commentInfo" ref="comment" />
       <goods-list :goods="recommends" ref="recommended" />
     </scroll>
-    <!-- 详情页：{{ iid }} -->
+    <detail-bottom />
+    <!-- 监听组件根元素 -->
+    <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -23,9 +31,11 @@ import DetailShopInfo from "./childComponents/DetailShopInfo";
 import DetailGoodsInfo from "./childComponents/DetailGoodsInfo";
 import DetailParamInfo from "./childComponents/DetailParamInfo";
 import DetailCommentInfo from "./childComponents/DetailCommentInfo";
+import DetailBottom from "./childComponents/DetailBottom";
 
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
+import BackTop from "components/content/backTop/BackTop";
 
 import {
   getDetail,
@@ -35,8 +45,9 @@ import {
   getRecommend,
 } from "network/detail";
 
-import { itemListenerMinxin } from "common/mixin";
+import { itemListenerMinxin, backTopMixin } from "common/mixin";
 import { debounce } from "common/utils";
+// import { BACKTOP_DISTANCE } from "common/const";
 export default {
   name: "Detail",
   components: {
@@ -48,8 +59,10 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
+    DetailBottom,
     Scroll,
     GoodsList,
+    // BackTop,
   },
 
   data() {
@@ -64,9 +77,13 @@ export default {
       recommends: [],
       themeTopYs: [],
       getThemeTopY: null,
+      currentIndex: 0,
+
+
+ 
     };
   },
-  mixins: [itemListenerMinxin],
+  mixins: [itemListenerMinxin, backTopMixin],
   created() {
     // 1.保存传入的iid
     this.iid = this.$route.params.iid;
@@ -140,9 +157,10 @@ export default {
     this.getThemeTopY = debounce(() => {
       this.themeTopYs = [];
       this.themeTopYs.push(0);
-      this.themeTopYs.push(-this.$refs.paramsed.$el.offsetTop);
-      this.themeTopYs.push(-this.$refs.comment.$el.offsetTop);
-      this.themeTopYs.push(-this.$refs.recommended.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.paramsed.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.recommended.$el.offsetTop);
+      this.themeTopYs.push(Number.MAX_VALUE);
       console.log(this.themeTopYs);
     }, 100);
   },
@@ -190,9 +208,62 @@ export default {
     },
     tabClick(index) {
       // 我们通过动态获取offsetTop的值
-      this.$refs.scroll.scrollTo(0, this.themeTopYs[index], 1000);
-      // console.log(index);
+
+      this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 1000);
     },
+    contentScroll(position) {
+      const positionY = -position.y;
+
+      // 2.positionY和主题进行对比
+      // 【0, -9305, -10054, -10251】
+      // positionY 在  0和   9305之间,index=0,
+      // positionY 在  9305和    10054之间,index=1,
+      // positionY 在  10054和   10251之间,index=2,大于或者等于10251 idnex=3;
+      // positionY 在  10251和   ++之间,index=3,
+
+      let length = this.themeTopYs.length;
+      for (let i = 0; i < length - 1; i++) {
+        // positionY > this.themeTopYs[i] &&
+        // positionY < this.themeTopYs[i + 1]这样写是有问题的！！！
+        // 第一种方法：
+        // if (
+        //   this.currentIndex !== i &&
+        //   ((i < length - 1 &&
+        //     positionY >= this.themeTopYs[i] &&
+        //     positionY < this.themeTopYs[i + 1]) ||
+        //     (i === length - 1 && positionY >= this.themeTopYs[i]))
+        // )
+        // 第二种方法：
+        if (
+          this.currentIndex !== i &&
+          positionY >= this.themeTopYs[i] &&
+          positionY < this.themeTopYs[i + 1]
+        ) {
+          this.currentIndex = i;
+          console.log(this.currentIndex);
+          this.$refs.nav.currentIndex = this.currentIndex;
+        }
+
+        // console.log(i);
+      }
+      // 3.是否显示回到顶部
+      this.isShowBackTop = -position.y > 1000 ? true : false;
+      this.isTabFiexed = -position.y > this.tabOffsetTop;
+    },
+    // 3.是否显示回到顶部
+    //  this.isShowBackTop = -position.y > BACK_POSITION;
+    // backClick() {
+    //   // console.log(this.$refs.scroll.scroll);
+    //   this.$refs.scroll.scrollTo(0, 0, 1000);
+    // },
+    // contentScroll(position) {
+    // 1.判断BackTop是否显示
+    // position.y < 1000;
+    // this.isShowBackTop = -position.y > 1000 ? true : false;
+
+    // 2.决定tabControl是否吸顶(position:fixed)
+    // this.isTabFiexed = -position.y > this.tabOffsetTop;
+    // },
   },
 };
 </script>
@@ -205,7 +276,7 @@ export default {
   height: 100vh;
 }
 .content {
-  height: calc(100% - 44px);
+  height: calc(100% - 44px - 49px);
 }
 .detail-nav {
   position: relative;

@@ -1,11 +1,12 @@
 <template>
-  <div class="wrapper" ref="w">
+  <div class="wrapper" ref="wrapper">
     <div class="content">
+      <h4>分类</h4>
       <!-- 无论是否设置click:false,button都是可以点击 -->
       <button @click="btnClick">222</button>
 
       <!-- 必须设置click:true,那么div才能监听点击 -->
-      <div @click="divClick">333</div>
+      <!-- <div @click="divClick">333</div> -->
       <ul class="content">
         <!-- <button @click="btn">1</button> -->
         <li>1</li>
@@ -109,14 +110,18 @@
         <li>99</li>
         <li>100</li>
       </ul>
+
+      <!-- 监听组件根元素 -->
+      <back-top @click.native="backClick" v-show="isShowBackTop" />
     </div>
   </div>
 </template>
 
 <script>
 import BScroll from "better-scroll";
-
+import { backTopMixin } from "common/mixin";
 export default {
+  mixins: [backTopMixin],
   name: "Category",
   data() {
     return {
@@ -134,7 +139,7 @@ export default {
   },
   // 组件创建完成后调用：可以获取Vue组件里面的变量属性
   mounted() {
-    this.scroll = new BScroll(this.$refs.w, {
+    this.scroll = new BScroll(this.$refs.wrapper, {
       click: false,
       // probeType: 3,
       // pullUpLoad: true,
@@ -151,6 +156,13 @@ export default {
   methods: {
     btn() {
       console.log(1);
+    },
+    btnClick() {
+      console.log("btnClick");
+    },
+    a(){
+        this.isShowBackTop = -position.y > 1000 ? true : false;
+      this.isTabFiexed = -position.y > this.tabOffsetTop;
     },
   },
 };
