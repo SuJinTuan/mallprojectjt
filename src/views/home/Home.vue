@@ -5,11 +5,11 @@
     </nav-bar>
 
     <tab-control
+      class="tab-control"
       :titles="['流行', '新款', '精选']"
       @tabClick="tabClick"
-      ref="tabControl1"
-      class="tab-control"
       v-show="isTabFiexed"
+      ref="topTabControl"
     />
 
     <!--
@@ -32,9 +32,9 @@
       在better-scroll里面这个办法行不通：:class="{ fixed: isTabFiexed }"
        -->
       <tab-control
+        ref="tabControl"
         :titles="['流行', '新款', '精选']"
         @tabClick="tabClick"
-        ref="tabControl2"
       />
       <goods-list :goods="showGoods" />
     </scroll>
@@ -95,7 +95,7 @@ export default {
       tabOffsetTop: 0,
       isTabFiexed: false,
       saveY: 0,
-      
+      // showgoods: null,
     };
   },
 
@@ -109,7 +109,7 @@ export default {
     console.log("home-d");
   },
   activated() {
-    console.log("activated");
+    console.log("home-enter-位置-activated");
     this.$refs.scroll.scrollTo(0, this.saveY, 0);
     // 最好强制刷新一次，不然就会出现意外问题
     this.$refs.scroll.refresh();
@@ -134,6 +134,9 @@ export default {
   },
   //mounted：只是挂载,但是不包括里面的图片加载
   mounted() {
+    // 要手动代码点击一次？？？
+    this.tabClick(0);
+    console.log(123);
     // 1.图片加载完成的事件监听
     // refresh产生了闭包
     // const refresh = debounce(this.$refs.scroll.refresh, 50);1
@@ -157,6 +160,7 @@ export default {
      *事监听相关的方法
      */
     tabClick(index) {
+      console.log(index);
       switch (index) {
         case 0:
           this.currentType = "pop";
@@ -168,8 +172,12 @@ export default {
           this.currentType = "sell";
           break;
       }
-      this.$refs.tabControl1.currentType = index;
-      this.$refs.tabControl2.currentType = index;
+      this.showGoods;
+      // 让两个TabControl的currentIndex保持一致
+      // if (this.$refs.topTabControl !== undefined) {
+      this.$refs.topTabControl.currentType = index;
+      this.$refs.tabControl.currentType = index;
+      // }
     },
     backClick() {
       // console.log(this.$refs.scroll.scroll);
@@ -192,7 +200,7 @@ export default {
       // 2.获取tabConstrol的offsetTop
       // 所有的组件都有一个属性：$el:用于获取组件中的元素
       // console.log(this.$refs.tabControl.$el.offsetTop);
-      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
+      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
     },
 
     /**

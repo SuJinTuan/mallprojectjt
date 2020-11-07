@@ -3,6 +3,7 @@ import { request } from "./request"
 export function getDetail(iid) {
   return request({
     url: '/detail',
+    // timeout: 5000,
     params: {
       iid
     }
@@ -11,7 +12,8 @@ export function getDetail(iid) {
 
 export function getRecommend() {
   return request({
-    url: '/recommend'
+    url: '/recommend',
+    // timeout: 5000,
   })
 }
 

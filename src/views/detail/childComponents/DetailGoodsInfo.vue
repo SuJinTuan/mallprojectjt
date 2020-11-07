@@ -45,6 +45,7 @@ export default {
       if (++this.counter === this.imagesLength) {
         // 如果没有判断，那么我们的emit回调出去会有很多次，这取决于图片
         this.$emit("imageLoad");
+        console.log("imgLoad加载");
       }
     },
   },

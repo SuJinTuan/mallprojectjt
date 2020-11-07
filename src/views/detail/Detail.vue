@@ -24,16 +24,15 @@ import DetailParamInfo from "./childComponents/DetailParamInfo";
 import DetailCommentInfo from "./childComponents/DetailCommentInfo";
 
 import Scroll from "components/common/scroll/Scroll";
+import GoodsList from "components/content/goods/GoodsList";
 
 import {
   getDetail,
   Goods,
   Shop,
   GoodsParam,
-  // getRecommend,
+  getRecommend,
 } from "network/detail";
-
-import GoodsList from "components/content/goods/GoodsList";
 
 import { itemListenerMinxin } from "common/mixin";
 
@@ -62,7 +61,6 @@ export default {
       paramInfo: {},
       commentInfo: {},
       recommends: [],
-     
     };
   },
   created() {
@@ -109,13 +107,11 @@ export default {
     });
 
     // 3.请求推荐数据
-    // getRecommend().then((res) => {
-    //   this.recommends = res.data.data.list;
-    // });
+    getRecommend().then((res) => {
+      this.recommends = res.data.data.list;
+    });
   },
-  mounted() {
-
-  },
+  mounted() {},
   // destroyed
   deactivated() {
     //1.取消全局变量的监听
