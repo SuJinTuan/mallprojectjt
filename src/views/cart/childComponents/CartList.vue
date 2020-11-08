@@ -38,10 +38,11 @@ export default {
 </script>
 
 <style scoped>
-.content {
-  height: (100% - 59px -44px);
+.cart-list {
+  height: (100% - 59px -44px -40px);
   overflow: hidden;
-
+}
+.content {
   /* 脱离标准流 */
   position: absolute;
   top: 44px;
