@@ -1,10 +1,15 @@
 <template>
   <div class="cart-list">
+    <!--
+       @scroll="contentScroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore"
+     -->
     <scroll class="content" ref="scroll">
       <cart-list-item
         v-for="(item, index) in cartList"
         :key="index"
-        :product="item"
+        :item-info="item"
       />
     </scroll>
   </div>
@@ -26,12 +31,15 @@ export default {
   computed: {
     ...mapGetters(["cartLength", "cartList"]),
   },
+  activated() {
+    this.$refs.scroll.refresh();
+  },
 };
 </script>
 
 <style scoped>
 .content {
-  height: (100% - 58px -44px);
+  height: (100% - 59px -44px);
   overflow: hidden;
 
   /* 脱离标准流 */

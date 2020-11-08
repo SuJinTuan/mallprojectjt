@@ -13,6 +13,7 @@ export default {
     payload.count++//目的是：跟踪购物车数量
   },
   [ADD_TO_CART](state, payload) {
+    payload.checked = true
     state.castList.push(payload)
   },
 }
