@@ -14,9 +14,11 @@
         <span class="text">收藏</span>
       </div>
     </div>
-    <!-- @click="addToCart" -->
+    <!--
+      v-on ~~>@
+       @click="addToCart" -->
     <div class="bar-item bar-right">
-      <div class="cart">加入购物车</div>
+      <div class="cart" @click="addToCart">加入购物车</div>
       <div class="buy">购买</div>
     </div>
   </div>
@@ -25,6 +27,12 @@
 <script>
 export default {
   name: "DetailBottomBar",
+  methods: {
+    addToCart() {
+      this.$emit("addToCart");
+      // console.log(101);
+    },
+  },
 };
 </script>
 

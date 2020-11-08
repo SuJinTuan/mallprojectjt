@@ -17,7 +17,11 @@
       <detail-comment-info :comment-info="commentInfo" ref="comment" />
       <goods-list :goods="recommends" ref="recommended" />
     </scroll>
-    <detail-bottom />
+    <!-- 我们在获取发送过来的数据的时候：
+      v-on~~>@addToCart="addToCart";用的是驼峰命名
+      但是如果是监听绑定元素：v-bind~~>：则属性的驼峰命名要变-来代替
+     -->
+    <detail-bottom @addToCart="addToCart" />
     <!-- 监听组件根元素 -->
     <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
@@ -47,6 +51,8 @@ import {
 
 import { itemListenerMinxin, backTopMixin } from "common/mixin";
 import { debounce } from "common/utils";
+// import { ADD_CART } from "../../store/mutations-types";
+
 // import { BACKTOP_DISTANCE } from "common/const";
 export default {
   name: "Detail",
@@ -78,9 +84,6 @@ export default {
       themeTopYs: [],
       getThemeTopY: null,
       currentIndex: 0,
-
-
- 
     };
   },
   mixins: [itemListenerMinxin, backTopMixin],
@@ -124,7 +127,6 @@ export default {
       if (data.rate.cRate !== 0) {
         this.commentInfo = data.rate.list[0];
       }
-      // console.log(this.commentInfo);
 
       // 这里的只是DOM和图片都没有加载完：this.$refs.paramsed.$el压根没有渲染
       // this.themeTopYs = [];
@@ -264,7 +266,24 @@ export default {
     // 2.决定tabControl是否吸顶(position:fixed)
     // this.isTabFiexed = -position.y > this.tabOffsetTop;
     // },
+    addToCart() {
+      console.log("atc");
+      // 1.获取购物车需要展示的信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+      // 2.将我们的商品添加都购物车
+      // 修改任何的store里面的东西，都要经过我们的mutaion
+      // 进行提交
+      // this.$store.commit("addCart", product);
+      // 进行分发
+      this.$store.dispatch("ADD_CART", product);
+    },
   },
+  computed: {},
 };
 </script>
 

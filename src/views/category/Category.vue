@@ -112,20 +112,20 @@
       </ul>
 
       <!-- 监听组件根元素 -->
-      <back-top @click.native="backClick" v-show="isShowBackTop" />
+      <!-- <back-top @click.native="backClick" v-show="isShowBackTop" /> -->
     </div>
   </div>
 </template>
 
 <script>
 import BScroll from "better-scroll";
-import { backTopMixin } from "common/mixin";
+// import { backTopMixin } from "common/mixin";
 export default {
-  mixins: [backTopMixin],
+  // mixins: [backTopMixin],
   name: "Category",
   data() {
     return {
-      scroll: null,
+      // scroll: null,
     };
   },
   // 组件创建完成后调用；所以这个生命周期是拿不到模板上的(无法挂载到模板)
