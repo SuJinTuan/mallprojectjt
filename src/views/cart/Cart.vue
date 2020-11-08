@@ -10,9 +10,8 @@
     <cart-list />
 
     <!-- 底部汇总 -->
-  <cart-bottom-bar />
+    <cart-bottom-bar />
   </div>
-
 </template>
 
 <script>
@@ -49,6 +48,8 @@ export default {
 <style scoped>
 .cart {
   height: 100vh;
+  /* top: 44px; */
+  /* overflow: hidden; */
 }
 .nav-bar {
   background-color: var(--color-tint);

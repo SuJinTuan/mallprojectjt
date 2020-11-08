@@ -276,6 +276,7 @@ export default {
       product.price = this.goods.realPrice;
       product.iid = this.iid;
       // 2.将我们的商品添加都购物车
+      // this.$store.cartList.push(product)
       // 修改任何的store里面的东西，都要经过我们的mutaion
       // 进行提交
       // this.$store.commit("addCart", product);

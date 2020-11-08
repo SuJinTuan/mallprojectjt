@@ -1,16 +1,19 @@
 <template>
   <div class="bottom-bar">
     <div class="check-content">
-      <check-button class="checked-button" />
+      <check-button class="checked-button" :is-checked="isSelectAll" />
       <span> 全选 </span>
     </div>
 
-    <div>合计：{{ totalPrice }}</div>
+    <div class="price">合计：{{ totalPrice }}</div>
+    <div class="calculate">去计算:{{ checkLength }}</div>
   </div>
 </template>
 
 <script>
 import CheckButton from "components/content/CheckButton/CheckButtoin";
+
+import { mapGetters } from "vuex";
 
 export default {
   name: "CartBottomBar",
@@ -18,19 +21,42 @@ export default {
     CheckButton,
   },
   computed: {
+    ...mapGetters(["cartList"]),
     totalPrice() {
       // this.$store.getters.cartList()
       return (
         "￥" +
-        this.$store.state.castList
+        this.cartList
           .filter((item) => {
             return item.checked;
           })
           .reduce((preValue, item) => {
             console.log(item);
-            return item.price * item.count;
+            return preValue + item.price * item.count;
           }, 0)
       );
+    },
+    checkLength() {
+      return this.cartList.filter((item) => item.checked).length;
+    },
+    isSelectAll() {
+      //  第一种：if (this.cartList.length === 0) return false;
+      // return !(this.cartList.filter((item) => !item.checked).length);
+      //  第二种：
+      // if (this.cartList.length === 0) return false;
+      // return !this.cartList.find((item) => !item.checked);
+      //  第三种：
+      if (this.cartList.length === 0) return false;
+      let isCheked = false;
+      for (let item of this.cartList) {
+        if (!item.checked) {
+          isCheked = false;
+          return isCheked;
+        }
+      }
+      return true;
+
+      
     },
   },
 };
@@ -44,7 +70,10 @@ export default {
 
   bottom: 60px;
 } */
-
+.price {
+  margin-left: 40px;
+  flex: 1;
+}
 .bottom-bar {
   position: fixed;
   display: flex;
@@ -55,6 +84,7 @@ export default {
   line-height: 40px;
 
   background-color: #eee;
+  font-size: 14px;
   /* left: 0; */
   /* box-shadow: 0 -2px 3px rgba(0, 0, 0, 0.2); */
   /* font-size: 14px; */
@@ -74,14 +104,22 @@ export default {
   /* 实现水平居中 */
   align-items: center;
   margin-left: 10px;
+  width: 60px;
 }
 .checked-button {
   line-height: 20px;
   width: 20px;
   height: 20px;
-  margin-right: 5px;
+  margin-right: 10px;
   /* display: flex;
   justify-content: center;
   align-items: center; */
+}
+.calculate {
+  width: 90px;
+  /* margin-right: 5px; */
+  background-color: #f50;
+  color: #fff;
+  text-align: center;
 }
 </style>

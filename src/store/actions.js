@@ -9,19 +9,19 @@ export default {
     // 数组常用的方法有哪些？indexof\push\pop\unshit\sort\reverse\map\reduce\filter\join
     // 第一种
     // let oldProduct = null;
-    // for (let item of state.castList) {
+    // for (let item of state.cartList) {
     //   if (item.iid === payload.iid) {
     //     oldProduct = item;
     //   }
     // }
     // 第二种：
-    // let index =state.castList.indexOf(payload)
-    // state.castList[index]//不等于-1的时候说明有
+    // let index =state.cartList.indexOf(payload)
+    // state.cartList[index]//不等于-1的时候说明有
     // 第三种：
 
     // 查找之前数中是否有该商品
 
-    let oldproduct = context.state.castList.find(item => {
+    let oldproduct = context.state.cartList.find(item => {
       // console.log(item + 'item');
       return item.iid === payload.iid
     })
@@ -32,7 +32,7 @@ export default {
       context.commit(ADD_COUNTER, oldproduct)
     } else {
       payload.count = 1;
-      // context.state.castList.push(payload);
+      // context.state.cartList.push(payload);
       context.commit(ADD_TO_CART, payload)
     }
   }

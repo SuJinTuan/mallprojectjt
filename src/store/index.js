@@ -10,7 +10,7 @@ Vue.use(Vuex);
 
 const state = {
   // 存放一个变量添加一个商品:数组--》对象
-  castList: [],
+  cartList: [],
 
 }
 // 2.创建插件Store
