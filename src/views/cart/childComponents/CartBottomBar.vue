@@ -1,12 +1,16 @@
 <template>
   <div class="bottom-bar">
     <div class="check-content">
-      <check-button class="checked-button" :is-checked="isSelectAll" />
+      <check-button
+        class="checked-button"
+        :is-checked="isSelectAll"
+        @click.native="checkClick"
+      />
       <span> 全选 </span>
     </div>
 
     <div class="price">合计：{{ totalPrice }}</div>
-    <div class="calculate">去计算:{{ checkLength }}</div>
+    <div class="calculate" @click="calculates">去计算:{{ checkLength }}</div>
   </div>
 </template>
 
@@ -55,8 +59,26 @@ export default {
         }
       }
       return true;
+    },
+  },
+  methods: {
+    checkClick() {
+      // if (this.isSelectAll) {
+      //   //全部选中
+      //   this.cartList.forEach((item) => (item.checked = false));
+      // } else {
+      //   //全部不选中
+      //   this.cartList.forEach((item) => (item.checked = true));
+      // }
 
-      
+      return this.isSelectAll
+        ? this.cartList.forEach((item) => (item.checked = false))
+        : this.cartList.forEach((item) => (item.checked = true));
+    },
+    calculates() {
+      if (!this.isSelectAll) {
+        this.$toast.show("请选择购买的商品", 2000);
+      }
     },
   },
 };

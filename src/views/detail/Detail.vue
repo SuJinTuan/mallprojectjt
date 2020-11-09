@@ -24,6 +24,9 @@
     <detail-bottom @addToCart="addToCart" />
     <!-- 监听组件根元素 -->
     <back-top @click.native="backClick" v-show="isShowBackTop" />
+
+    <!-- 土司弹窗 -->
+    <!-- <toast :message="message" :show="show"></toast> -->
   </div>
 </template>
 
@@ -51,9 +54,9 @@ import {
 
 import { itemListenerMinxin, backTopMixin } from "common/mixin";
 import { debounce } from "common/utils";
-// import { ADD_CART } from "../../store/mutations-types";
+import { mapActions } from "vuex";
 
-// import { BACKTOP_DISTANCE } from "common/const";
+import Toast from "components/common/toast/Toast";
 export default {
   name: "Detail",
   components: {
@@ -68,6 +71,7 @@ export default {
     DetailBottom,
     Scroll,
     GoodsList,
+    // Toast,
     // BackTop,
   },
 
@@ -84,6 +88,8 @@ export default {
       themeTopYs: [],
       getThemeTopY: null,
       currentIndex: 0,
+      // message: "",
+      // show: false,
     };
   },
   mixins: [itemListenerMinxin, backTopMixin],
@@ -188,6 +194,7 @@ export default {
     // 2
   },
   methods: {
+    ...mapActions(["ADD_CART"]),
     // 获取重新刷新scroll；为了获取图片加载完的高度
     imageLoad() {
       // 函数内部有自己的作用域，会每次调用的时候都会生成一个新的
@@ -281,7 +288,23 @@ export default {
       // 进行提交
       // this.$store.commit("addCart", product);
       // 进行分发
-      this.$store.dispatch("ADD_CART", product);
+      this.ADD_CART(product).then((res) => {
+        // this.show = true;
+        // console.log(this.show);
+        // this.message = res;
+        // console.log(this.message);
+        // setTimeout(() => {
+        //   this.show = false;
+        //   this.message = "";
+        // }, 1500);
+        // console.log(res);
+
+        this.$toast.show(res);
+        console.log(this.$toast);
+      });
+      // this.$store.dispatch("ADD_CART", product).then((res) => {
+      //   console.log(res);
+      // });
     },
   },
   computed: {},
