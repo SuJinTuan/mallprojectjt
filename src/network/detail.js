@@ -16,9 +16,22 @@ export function getRecommend() {
     // timeout: 5000,
   })
 }
+// -----------------------------------------
+// export function getCategory() {
+//   return axios({
+//     url: '/category'
+//   })
+// }
 
-
-
+// export function getSubcategory(maitKey) {
+//   return axios({
+//     url: '/subcategory',
+//     params: {
+//       maitKey
+//     }
+//   })
+// }
+// -----------------------------------------
 
 // 面向对象的封装：将服务器返回的数据将其封装到一个类里面在然后创建类对应的对象；
 // 用对象给我们把这些信息传到下一层组件里面；让组件对这个东西做一个展示
