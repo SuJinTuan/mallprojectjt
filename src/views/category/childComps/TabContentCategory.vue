@@ -7,7 +7,7 @@
         :key="index"
       >
         <a :href="item.link">
-          <img class="item-img" :src="item.image" alt="" />
+          <img class="item-img" v-lazy="item.image" alt="" />
           <div class="item-text">{{ item.title }}</div>
         </a>
       </div>
