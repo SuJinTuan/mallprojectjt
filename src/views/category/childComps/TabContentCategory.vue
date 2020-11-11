@@ -6,10 +6,10 @@
         v-for="(item, index) in subcategories.list"
         :key="index"
       >
-        <a :href="item.link">
+        <!-- <a :href="item.link"> -->
           <img class="item-img" v-lazy="item.image" alt="" />
           <div class="item-text">{{ item.title }}</div>
-        </a>
+        <!-- </a> -->
       </div>
     </div>
   </scroll>
